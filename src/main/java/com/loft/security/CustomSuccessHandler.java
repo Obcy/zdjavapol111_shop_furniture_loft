@@ -18,8 +18,8 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {
             switch (grantedAuthority.getAuthority()) {
-                case "ROLE_ADMIN": new DefaultRedirectStrategy().sendRedirect(request, response, "/admin/panel"); break;
-                case "ROLE_USER": new DefaultRedirectStrategy().sendRedirect(request, response, "/user/panel"); break;
+                case "ROLE_ADMIN": new DefaultRedirectStrategy().sendRedirect(request, response, "/"); break;
+                case "ROLE_USER": new DefaultRedirectStrategy().sendRedirect(request, response, "/"); break;
                 default: throw new IllegalStateException("Unrecognized role " + grantedAuthority.getAuthority());
             }
         }

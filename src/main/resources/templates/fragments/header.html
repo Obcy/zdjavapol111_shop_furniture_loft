@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <title>LoftShop</title>
+
+    <!-- css styles -->
+
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/6.1.0/css/all.css} "/>
+
+    <!-- css styles end -->
+</head>
+<body>
+<header th:fragment="header">
+    <div class="px-3 py-2 bg-dark text-white">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+                    <i class="fa-solid fa-chair fa-3x"></i> <span class="ms-1 display-4">LoftShop</span>
+                </a>
+
+                <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+                    <li>
+                        <a href="#" class="nav-link text-secondary text-center">
+                            <i class="fa-solid fa-house fa-2x d-block"></i>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link text-secondary text-center">
+                            <i class="fa-solid fa-list fa-2x d-block"></i>
+                            Products
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="px-3 py-2 border-bottom mb-3">
+        <div class="container d-flex flex-wrap justify-content-center">
+            <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+            </form>
+
+            <div sec:authorize="isAuthenticated()">
+                <a class="btn btn-light text-dark me-2" th:href="@{/logout}">Logout</a>
+            </div>
+            <div class="text-end"  sec:authorize="isAnonymous()">
+
+                <a class="btn btn-light text-dark me-2" th:href="@{/login}">Login</a>
+                <a class="btn btn-primary" th:href="@{/registration}">Sign-up</a>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>

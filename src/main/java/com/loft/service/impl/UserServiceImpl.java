@@ -25,12 +25,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public boolean existsByUsername(String username) {
-        if (username == null || username.isEmpty()) {
+    public boolean existsByEmailAdress(String emailAdress) {
+        if (emailAdress == null || emailAdress.isEmpty()) {
             throw new IllegalArgumentException("Username is empty!");
         }
 
-        return userRepository.existsByUsername(username);
+        return userRepository.existsByEmailAdress(emailAdress);
     }
 
     @Override
