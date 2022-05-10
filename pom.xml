@@ -96,6 +96,11 @@
 			<version>${org.mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>font-awesome</artifactId>
+			<version>6.1.0</version>
+		</dependency>
 
 	</dependencies>
 
