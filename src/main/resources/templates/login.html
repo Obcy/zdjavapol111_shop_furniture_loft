@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <title>LoftShop - Login</title>
+
+    <!-- css styles -->
+
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/6.1.0/css/all.css} "/>
+
+    <!-- css styles end -->
+
+</head>
+<body>
+
+<header th:replace="fragments/header"></header>
+
+<section class="">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <form method="post" th:action="@{/login}">
+                    <div class="text-center display-5 mb-4">
+                        Login
+                    </div>
+                    <div class="form-outline mb-4">
+                        <input type="email" id="formEmailInput" name="email" class="form-control" />
+                        <label class="form-label" for="formEmailInput">Email address</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <input type="password" id="formPassword" name="password" class="form-control" />
+                        <label class="form-label" for="formPassword">Password</label>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col d-flex justify-content-center">
+                            <!-- Checkbox -->
+                            <div class="form-check">
+                                <input class="form-check-input" name="remember-me" type="checkbox" value="" id="formRememberMeCheck" checked />
+                                <label class="form-check-label" for="formRememberMeCheck"> Remember me </label>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <a href="#!">Forgot password?</a>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+                    </div>
+
+                    <div class="text-center">
+                        <p>Not a member? <a th:href="@{/registration}">Register</a></p>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- scripts -->
+    <script th:src="@{/webjars/popper.js/2.9.3/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js.gz}"></script>
+
+<!-- scripts end -->
+</body>
+</html>

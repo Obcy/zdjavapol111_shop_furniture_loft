@@ -4,7 +4,7 @@ import com.loft.model.User;
 
 public interface UserService {
 
-    boolean existsByUsername(String username);
+    boolean existsByEmailAdress(String emailAdress);
 
     void save(User user);
 }
