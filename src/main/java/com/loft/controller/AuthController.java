@@ -50,7 +50,7 @@ public class AuthController {
     @PostMapping(path = "/register")
     public String handleNewUser(@ModelAttribute User user) {
 
-        if (userService.existsByEmailAdress(user.getEmailAdress())) {
+        if (userService.existsByEmailAddress(user.getEmailAddress())) {
             return "registration";
         }
         userService.save(user);
