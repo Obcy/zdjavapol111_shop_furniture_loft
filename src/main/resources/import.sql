@@ -6,3 +6,11 @@ insert into user (id, email_address, password) values(2, 'user@loftshop.pl', '$2
 
 insert into user_role (user_id, role_id) values(1,1);
 insert into user_role (user_id, role_id) values(2,2);
+
+insert into category (name, id) values ('Meble ogrodowe', 1);
+insert into category (name, id) values ('Salon', 2);
+insert into category (name, id, parent_id) values ('Kuchnia', 3, 1);
+
+insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('Fotel', 'Do ogrodu', '', 1, 200.5, '', 'GARDEN_FURNITURE');
+insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('xxx', 'aaa', '', 2, 2000.5, '', 'GARDEN_FURNITURE');
+insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('yyy', 'bbb', '', 3, 20.5, '', 'GARDEN_FURNITURE');
