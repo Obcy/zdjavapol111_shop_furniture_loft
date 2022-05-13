@@ -37,6 +37,13 @@
                             Products
                         </a>
                     </li>
+
+                    <li>
+                        <select class="form-control" id="dropDownList">
+                            <option value="0">Currency</option>
+                            <option th:each="option : ${options}" th:value="${option}" th:text="${option}"></option>
+                        </select>
+                    </li>
                 </ul>
             </div>
         </div>

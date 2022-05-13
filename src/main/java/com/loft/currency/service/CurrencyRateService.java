@@ -1,14 +1,14 @@
 package com.loft.currency.service;
 
 import com.loft.currency.model.CurrencyRate;
-import com.loft.currency.model.Dto.CurrencyRateDto;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
-public interface CurrentRateService {
+public interface CurrencyRateService {
 
-    void createCurrentRate(CurrencyRateDto currentRateDto);
+    void createCurrencyRate(String code);
     List<CurrencyRate> getCurrentRateByDate(LocalDate date);
-    void getAcctualCurrentRate();
+    Optional<CurrencyRate> getCurrencyRateByDate(LocalDate date, String code);
 }
