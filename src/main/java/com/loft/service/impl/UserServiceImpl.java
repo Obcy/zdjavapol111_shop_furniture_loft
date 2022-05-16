@@ -34,6 +34,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByEmailAddress(String emailAddress) {
+        if (emailAddress == null || emailAddress.isEmpty()) {
+            throw new IllegalArgumentException("Username is empty!");
+        }
+        return userRepository.findByEmailAddress(emailAddress);
+    }
+
+    @Override
     public void save(User user) {
         user.setPassword(getEncodedPassword(user.getPassword()));
         user.setRoles(getUserRoles());
