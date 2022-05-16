@@ -12,5 +12,5 @@ insert into category (name, id) values ('Salon', 2);
 insert into category (name, id, parent_id) values ('Kuchnia', 3, 1);
 
 insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('Fotel', 'Do ogrodu', '', 1, 200.5, '', 'GARDEN_FURNITURE');
-insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('xxx', 'aaa', '', 2, 2000.5, '', 'GARDEN_FURNITURE');
-insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('yyy', 'bbb', '', 3, 20.5, '', 'GARDEN_FURNITURE');
+insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('Stół', 'Do ogrodu', '', 2, 2000.5, '', 'GARDEN_FURNITURE');
+insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('Huśtawka', 'Do ogrodu', '', 3, 20.5, '', 'GARDEN_FURNITURE');

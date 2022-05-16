@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -22,7 +23,7 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    private double price;
+    private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     private ProductType productType;
