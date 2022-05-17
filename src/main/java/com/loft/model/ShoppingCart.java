@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Data
@@ -23,5 +24,8 @@ public class ShoppingCart {
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="userId")
     private User user;
+
+
+
 
 }
