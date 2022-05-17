@@ -3,6 +3,7 @@ package com.loft.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -18,6 +19,8 @@ public class ShoppingCartItem {
     private Product product;
 
     private int quantity;
+
+    private BigDecimal totalItemPrice = BigDecimal.ZERO;
 
 
 }

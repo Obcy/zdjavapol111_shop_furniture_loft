@@ -29,44 +29,47 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private ShoppingCart shoppingCart;
 
+    @Autowired
+    private HttpSession httpSession;
+
     @Override
     public ShoppingCart create() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if (!username.equals("anonymousUser")) {
-            User user = userService.findByEmailAddress(username);
-            if (shoppingCartRepository.existsByUserId(user.getId())) {
-                shoppingCart = this.getByUserId(user.getId());
-                return shoppingCart;
-            } else {
-                HttpSession session = getHttpSession();
-                if (session.getAttribute("shoppingCartId") == null) {
-                    shoppingCart = new ShoppingCart();
-                } else {
-                    Integer shoppingCartId = (Integer) session.getAttribute("shoppingCartId");
-                    shoppingCart = this.get(shoppingCartId);
-                }
-                shoppingCart.setUser(user);
-                return shoppingCart;
-            }
+            return getShoppingCartByUser(username);
         }
-        HttpSession session = getHttpSession();
-        if (session.getAttribute("shoppingCartId") == null) {
+        return getShoppingCart();
+    }
+
+    private ShoppingCart getShoppingCart() {
+        if (httpSession.getAttribute("shoppingCartId") == null) {
             shoppingCart = new ShoppingCart();
             return shoppingCart;
         }
-        Integer shoppingCartId = (Integer) session.getAttribute("shoppingCartId");
+        Integer shoppingCartId = (Integer) httpSession.getAttribute("shoppingCartId");
         return this.get(shoppingCartId);
     }
 
-    private HttpSession getHttpSession() {
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
-                .getRequestAttributes())).getRequest();
-        return request.getSession();
+    private ShoppingCart getShoppingCartByUser(String username) {
+        User user = userService.findByEmailAddress(username);
+        if (shoppingCartRepository.existsByUserId(user.getId())) {
+            shoppingCart = this.getByUserId(user.getId());
+            return shoppingCart;
+        } else {
+            if (httpSession.getAttribute("shoppingCartId") == null) {
+                shoppingCart = new ShoppingCart();
+            } else {
+                Integer shoppingCartId = (Integer) httpSession.getAttribute("shoppingCartId");
+                shoppingCart = this.get(shoppingCartId);
+            }
+            shoppingCart.setUser(user);
+            return shoppingCart;
+        }
     }
 
     @Override
     public ShoppingCart get(int id) {
-        return shoppingCartRepository.findById(id).orElseThrow();
+        return shoppingCartRepository.findById(id).orElse(new ShoppingCart());
     }
 
     @Override
@@ -77,8 +80,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void save(ShoppingCart shoppingCart) {
         shoppingCartRepository.save(shoppingCart);
-        HttpSession session = getHttpSession();
-        session.setAttribute("shoppingCartId", shoppingCart.getId());
+        httpSession.setAttribute("shoppingCartId", shoppingCart.getId());
     }
 
     @Override
@@ -86,10 +88,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct() == product)
                 .findFirst()
-                .ifPresentOrElse(cartItem -> cartItem.setQuantity(cartItem.getQuantity() + 1), () -> {
+                .ifPresentOrElse(cartItem -> {
+                    cartItem.setQuantity(cartItem.getQuantity() + 1);
+                    cartItem.setTotalItemPrice(product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+
+                }, () -> {
                     ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
                     shoppingCartItem.setProduct(product);
                     shoppingCartItem.setQuantity(1);
+                    shoppingCartItem.setTotalItemPrice(product.getPrice().multiply(BigDecimal.valueOf(shoppingCartItem.getQuantity())));
                     shoppingCart.getCartItems().add(shoppingCartItem);
                 });
     }
@@ -111,6 +118,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                         ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
                         shoppingCartItem.setProduct(product);
                         shoppingCartItem.setQuantity(quantity);
+                        shoppingCartItem.setTotalItemPrice(product.getPrice().multiply(BigDecimal.valueOf(shoppingCartItem.getQuantity())));
                         shoppingCart.getCartItems().add(shoppingCartItem);
                     });
         }

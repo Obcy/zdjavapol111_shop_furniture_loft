@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -18,8 +19,7 @@ public class ShoppingCart {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "shoppingCartId")
-    private Set<ShoppingCartItem> cartItems;
-
+    private Set<ShoppingCartItem> cartItems = new HashSet<>();
 
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="userId")
