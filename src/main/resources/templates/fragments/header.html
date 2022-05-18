@@ -32,17 +32,16 @@
                         </a>
                     </li>
                     <li>
-                        <a href="productList" class="nav-link text-secondary text-center">
+                        <a href="productList/USD" class="nav-link text-secondary text-center">
                             <i class="fa-solid fa-list fa-2x d-block"></i>
                             Products
                         </a>
                     </li>
 
                     <li>
-                        <select class="form-control" id="dropDownList">
-                            <option value="0">Currency</option>
-                            <option th:each="option : ${options}" th:value="${option}" th:text="${option}"></option>
-                        </select>
+                        <div th:each="currency : ${options}">
+                            <a th:href="@{'/productList/' + ${currency}}" th:text="${currency}"></a>
+                        </div>
                     </li>
                 </ul>
             </div>
