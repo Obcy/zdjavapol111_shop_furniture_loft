@@ -8,4 +8,6 @@ public interface ProductService {
 
     List<Product> getAll(String currencyCode);
 
+    List<Product> findByPhrase(String search);
+
 }

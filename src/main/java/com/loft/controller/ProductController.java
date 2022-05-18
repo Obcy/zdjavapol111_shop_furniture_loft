@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,14 +28,23 @@ public class ProductController {
 
     @Autowired
     private CurrencyRateService currencyRateService;
+  
+    @GetMapping(path = "/search")
+    public String searchProduct(ModelMap modelMap, @RequestParam(required = false, name = "search") String search) {
+       
+        modelMap.addAttribute("Produkty", productService.findByPhrase(search));
+        log.info("search phrase " + search);
+      
+    }
 
     @GetMapping(path = "/productList/{code}")
     public String productList(@PathVariable String code, ModelMap modelMap) {
         modelMap.addAttribute("products", productService.getAll(code));
         List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
         List<String> options = currencyRates.stream().map(currencyRate -> currencyRate.getCode()).collect(Collectors.toList());
-        modelMap.addAttribute("options", options);;
+        modelMap.addAttribute("options", options);
         return "products";
     }
+
 }
 

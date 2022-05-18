@@ -40,4 +40,9 @@ public class ProductServiceImpl implements ProductService {
         products.stream().forEach(product -> product.setPrice(product.getPrice().divide(currencyRate.getCurrency(), RoundingMode.CEILING)));
         return products;
     }
+
+    @Override
+    public List<Product> findByPhrase(String search) {
+        return productRepository.findByTitleContainingIgnoreCase(search);
+    }
 }
