@@ -2,7 +2,6 @@ package com.loft.controller;
 
 import com.loft.currency.model.CurrencyRate;
 import com.loft.currency.service.CurrencyRateService;
-import com.loft.model.Product;
 import com.loft.model.ShoppingCart;
 import com.loft.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class CartController {
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         modelMap.addAttribute("currentUser", currentUser);
 
-        ShoppingCart shoppingCart = shoppingCartService.create();
+        ShoppingCart shoppingCart = shoppingCartService.createOrGet();
         modelMap.addAttribute("cartItems", shoppingCart.getCartItems());
         modelMap.addAttribute("totalPrice", shoppingCartService.getTotal());
 

@@ -30,13 +30,6 @@ public class PageController {
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         modelMap.addAttribute("currentUser", currentUser);
 
-        ShoppingCart shoppingCart = shoppingCartService.create();
-        shoppingCartService.save(shoppingCart);
-
-        log.info(SecurityContextHolder.getContext().getAuthentication().getName());
-       // log.info(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
-
-
         List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
         List<String> options = currencyRates.stream().map(currencyRate -> currencyRate.getCode()).collect(Collectors.toList());
         modelMap.addAttribute("options", options);

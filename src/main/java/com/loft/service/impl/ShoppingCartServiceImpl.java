@@ -10,13 +10,9 @@ import com.loft.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
@@ -33,7 +29,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private HttpSession httpSession;
 
     @Override
-    public ShoppingCart create() {
+    public ShoppingCart createOrGet() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if (!username.equals("anonymousUser")) {
             return getShoppingCartByUser(username);
@@ -122,6 +118,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                         shoppingCart.getCartItems().add(shoppingCartItem);
                     });
         }
+    }
+
+    @Override
+    public void changeProductByIdQuantity(int id, int quantity) {
+
+            shoppingCart.getCartItems().stream()
+                    .filter(cartItem -> cartItem.getProduct().getId() == id)
+                    .findFirst()
+                    .ifPresent(cartItem -> this.changeProductQuantity(cartItem.getProduct(), quantity));
+
     }
 
     @Override
