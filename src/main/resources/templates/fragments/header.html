@@ -26,23 +26,22 @@
 
                 <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                     <li>
-                        <a href="#" class="nav-link text-secondary text-center">
+                        <a href="/" class="nav-link text-secondary text-center">
                             <i class="fa-solid fa-house fa-2x d-block"></i>
                             Home
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link text-secondary text-center">
+                        <a href="productList/USD" class="nav-link text-secondary text-center">
                             <i class="fa-solid fa-list fa-2x d-block"></i>
                             Products
                         </a>
                     </li>
 
                     <li>
-                        <select class="form-control" id="dropDownList">
-                            <option value="0">Currency</option>
-                            <option th:each="option : ${options}" th:value="${option}" th:text="${option}"></option>
-                        </select>
+                        <div th:each="currency : ${options}">
+                            <a th:href="@{'/productList/' + ${currency}}" th:text="${currency}"></a>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -50,8 +49,9 @@
     </div>
     <div class="px-3 py-2 border-bottom mb-3">
         <div class="container d-flex flex-wrap justify-content-center">
-            <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
-                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+            <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" method="get" th:action="@{/productList}">
+                <input type="search" class="form-control" placeholder="Search..." aria-label="Search" id="search" name="search">
+                <button type="submit">Search</button>
             </form>
 
             <div sec:authorize="isAuthenticated()">
