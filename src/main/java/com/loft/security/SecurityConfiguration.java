@@ -1,5 +1,7 @@
 package com.loft.security;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.jpa.HibernateEntityManagerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
 
 }

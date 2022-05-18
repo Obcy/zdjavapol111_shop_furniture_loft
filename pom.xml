@@ -20,6 +20,7 @@
 		<org.junit.jupiter.version>5.8.2</org.junit.jupiter.version>
 		<org.mockito.version>4.2.0</org.mockito.version>
 		<org.assertj.core.version>3.22.0</org.assertj.core.version>
+		<org.webjars.jquery.version>3.6.0</org.webjars.jquery.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -52,6 +53,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-jdbc</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
@@ -71,6 +80,11 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>font-awesome</artifactId>
 			<version>${org.webjars.font-awseome.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>${org.webjars.jquery.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -96,11 +110,7 @@
 			<version>${org.mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>font-awesome</artifactId>
-			<version>6.1.0</version>
-		</dependency>
+
 
 	</dependencies>
 

@@ -38,6 +38,7 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
     @Override
     public Optional<CurrencyRate> getCurrencyRateByDate(LocalDate date, String code) {
         return currencyRateRepository.findByDateAndCode(date, code);
+
     }
 
 }
