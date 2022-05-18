@@ -18,4 +18,11 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAll() {
         return productRepository.findAll();
     }
+
+    @Override
+    public List<Product> findByPhrase(String search) {
+        return productRepository.findByTitleContainingIgnoreCase(search);
+    }
+
+
 }
