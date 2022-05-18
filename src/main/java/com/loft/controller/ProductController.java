@@ -32,8 +32,10 @@ public class ProductController {
     @GetMapping(path = "/search")
     public String searchProduct(ModelMap modelMap, @RequestParam(required = false, name = "search") String search) {
        
-        modelMap.addAttribute("Produkty", productService.findByPhrase(search));
+        modelMap.addAttribute("products", productService.findByPhrase(search));
         log.info("search phrase " + search);
+
+        return "search";
       
     }
 
