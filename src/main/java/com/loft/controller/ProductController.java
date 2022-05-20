@@ -34,7 +34,6 @@ public class ProductController {
         log.info("search phrase " + search);
         modelMap.addAttribute("products", productService.findByPhrase(search));
 
-
         return "search";
       
     }
