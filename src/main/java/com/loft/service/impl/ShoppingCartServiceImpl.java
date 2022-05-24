@@ -137,4 +137,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
     }
+
+    @Override
+    public void delete(ShoppingCart shoppingCart) {
+        shoppingCartRepository.delete(shoppingCart);
+    }
 }

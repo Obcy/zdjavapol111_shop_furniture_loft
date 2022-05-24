@@ -27,18 +27,16 @@
             <div class="col-md-8">
                 <div class="card mb-4">
                     <div class="card-header py-3">
-                        <h5 class="mb-0">Cart - <small th:text="${cartItems.size()} + ' items'"></small></h5>
+                        <h5 class="mb-0">Order - <small th:text="${order.getOrderNumber()}"></small></h5>
                     </div>
                     <div class="card-body">
                         <!-- Single item -->
-                        <div class="row shoppingCartItem" th:each="cartItem, iStat : ${cartItems}">
-                            <input type="hidden" name="itemId" th:value="${cartItem.getId()}">
-                            <input type="hidden" name="price" th:value="${cartItem.getProduct().getPrice()}">
+                        <div class="row shoppingCartItem" th:each="orderItem, iStat : ${order.getOrderItems()}">
                             <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
                                 <!-- Image -->
                                 <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                                    <img th:src="${!#strings.isEmpty(cartItem.getProduct().getThumbnail())} ? ${cartItem.getProduct().getThumbnail()} : '/images/no-thumbnail.jpg'"
-                                         class="w-100" th:alt="${cartItem.getProduct().getTitle()}" />
+                                    <img th:src="${!#strings.isEmpty(orderItem.getThumbnail())} ? ${orderItem.getThumbnail()} : '/images/no-thumbnail.jpg'"
+                                         class="w-100" th:alt="${orderItem.getProductName()}" />
                                     <a href="#!">
                                         <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
                                     </a>
@@ -48,38 +46,21 @@
 
                             <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
                                 <!-- Data -->
-                                <p><strong th:text="${cartItem.getProduct().getTitle()}"></strong></p>
-                                <p th:text="${cartItem.getProduct().getDescription()}"></p>
-                                <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
-                                        title="Remove item">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                <p><strong th:text="${orderItem.getProductName()}"></strong></p>
                                 <!-- Data -->
                             </div>
 
                             <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                                 <!-- Quantity -->
                                 <div class="d-flex mb-4" style="max-width: 300px">
-                                    <button class="btn btn-primary px-3 me-2 add-quantity-btn"
-                                            onclick="subCartItem(this)">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
 
-                                    <div class="form-outline">
-                                        <input th:id="'quantity' + ${iStat.index}" min="0" name="quantity" th:value="${cartItem.getQuantity()}" type="number" class="form-control" />
-                                        <label class="form-label" th:for="'quantity' + ${iStat.index}">Quantity</label>
-                                    </div>
+                                    <p class="form-outline" th:text="${orderItem.getQuantity()}"></p>
 
-                                    <button class="btn btn-primary px-3 ms-2 sub-quantity-btn"
-                                            onclick="addCartItem(this)">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
                                 </div>
                                 <!-- Quantity -->
-
                                 <!-- Price -->
                                 <p class="text-start text-md-center">
-                                    <strong th:text="${cartItem.getProduct().getPrice()}"></strong>
+                                    <strong th:text="${orderItem.getPrice()}"></strong>
                                 </p>
                                 <!-- Price -->
                             </div>
@@ -94,23 +75,10 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <p><strong>Expected shipping delivery</strong></p>
-                        <p class="mb-0">12.10.2020 - 14.10.2020</p>
+                        <p class="mb-0">TODO</p>
                     </div>
                 </div>
-                <div class="card mb-4 mb-lg-0">
-                    <div class="card-body">
-                        <p><strong>We accept</strong></p>
-                        <img class="me-2" width="45px"
-                             src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-                             alt="Visa" />
-                        <img class="me-2" width="45px"
-                             src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
-                             alt="American Express" />
-                        <img class="me-2" width="45px"
-                             src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
-                             alt="Mastercard" />
-                    </div>
-                </div>
+
             </div>
             <div class="col-md-4">
                 <div class="card mb-4">
@@ -140,9 +108,7 @@
                             </li>
                         </ul>
 
-                        <a th:href="@{/checkout}" type="button" class="btn btn-primary btn-lg btn-block">
-                            Go to checkout
-                        </a>
+
                     </div>
                 </div>
             </div>
