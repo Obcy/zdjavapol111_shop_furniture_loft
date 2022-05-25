@@ -1,5 +1,7 @@
 package com.loft.controller;
 
+import com.loft.currency.model.CurrencyRate;
+import com.loft.currency.service.CurrencyRateService;
 import com.loft.model.*;
 import com.loft.service.OrderService;
 import com.loft.service.ShoppingCartService;
@@ -15,6 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -31,12 +35,17 @@ public class OrderController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CurrencyRateService currencyRateService;
+
     @GetMapping("/order/{orderKey}")
     public String showOrderWithIdAndKey(@PathVariable String orderKey, ModelMap modelMap) {
 
         Order order = orderService.findByOrderKey(orderKey);
         modelMap.addAttribute("order", order);
         modelMap.addAttribute("totalPrice", orderService.getTotal(order));
+
+        addDefaultsToModelMap(modelMap);
 
         return "order";
     }
@@ -54,6 +63,8 @@ public class OrderController {
         orderService.save(order);
 
         modelMap.addAttribute("order", order);
+
+        addDefaultsToModelMap(modelMap);
 
         return "order";
     }
@@ -99,6 +110,13 @@ public class OrderController {
 
 
         return "redirect:/order/" + order.getOrderKey();
+    }
+
+    private void addDefaultsToModelMap(ModelMap modelMap) {
+        modelMap.addAttribute("displayCurrency", currencyRateService.getDisplayCurrency());
+        List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
+        List<String> options = currencyRates.stream().map(CurrencyRate::getCode).collect(Collectors.toList());
+        modelMap.addAttribute("options", options);
     }
 
 

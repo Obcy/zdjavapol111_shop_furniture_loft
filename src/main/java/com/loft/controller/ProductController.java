@@ -41,40 +41,55 @@ public class ProductController {
         log.info("search phrase " + search);
         modelMap.addAttribute("products", productService.findByPhrase(search));
 
+        modelMap.addAttribute("searchPharse", search);
+
+        addDefaultsToModelMap(modelMap);
+
         return "search";
       
     }
 
-    @GetMapping(path = "/productList/{code}")
-    public String productList(@PathVariable String code, ModelMap modelMap) {
-        modelMap.addAttribute("products", productService.getAll(code));
-        List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
-        List<String> options = currencyRates.stream().map(currencyRate -> currencyRate.getCode()).collect(Collectors.toList());
-        modelMap.addAttribute("options", options);
+    @GetMapping(path = "/products")
+    public String productList(ModelMap modelMap) {
+        modelMap.addAttribute("products", productService.getAll());
+        addDefaultsToModelMap(modelMap);
 
         List<Category> categories = categoryService.getParents();
         modelMap.addAttribute("categories", categories);
+
+        modelMap.addAttribute("currentCategoryId", null);
 
         return "products";
     }
 
     @GetMapping(path = "/category/{id}")
     public String showProductsFromCategory(@PathVariable int id, ModelMap modelMap) {
+
         Category category = categoryService.getById(id);
         if (category == null) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Category not found"
             );
         }
+        modelMap.addAttribute("currentCategoryId", id);
+
         modelMap.addAttribute("products", productService.getByCategory(category));
-        List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
-        List<String> options = currencyRates.stream().map(currencyRate -> currencyRate.getCode()).collect(Collectors.toList());
-        modelMap.addAttribute("options", options);
+
+        addDefaultsToModelMap(modelMap);
+
+
 
         List<Category> categories = categoryService.getParents();
         modelMap.addAttribute("categories", categories);
 
         return "products";
+    }
+
+    private void addDefaultsToModelMap(ModelMap modelMap) {
+        modelMap.addAttribute("displayCurrency", currencyRateService.getDisplayCurrency());
+        List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
+        List<String> options = currencyRates.stream().map(CurrencyRate::getCode).collect(Collectors.toList());
+        modelMap.addAttribute("options", options);
     }
 
 }

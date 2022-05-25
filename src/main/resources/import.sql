@@ -15,6 +15,6 @@ insert into product (title, description, thumbnail, category_id, price, author, 
 insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('Stół', 'Do ogrodu', '', 2, 2000.5, '', 'GARDEN_FURNITURE');
 insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('Huśtawka', 'Do ogrodu', '', 3, 20.5, '', 'GARDEN_FURNITURE');
 
-INSERT INTO shopping_cart (id, user_id) VALUES (1, 1);
-INSERT INTO shopping_cart_item (id, quantity, total_item_price, product_id, shopping_cart_id) VALUES (1, 2, 401.00, 1, 1);
+#INSERT INTO shopping_cart (id, user_id) VALUES (1, 1);
+#INSERT INTO shopping_cart_item (id, quantity, product_id, shopping_cart_id) VALUES (1, 2, 1, 1);
 

@@ -7,6 +7,7 @@ import com.loft.model.User;
 import com.loft.repository.ShoppingCartRepository;
 import com.loft.service.ShoppingCartService;
 import com.loft.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 
+@Slf4j
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
@@ -43,7 +45,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             return shoppingCart;
         }
         Integer shoppingCartId = (Integer) httpSession.getAttribute("shoppingCartId");
-        return this.get(shoppingCartId);
+        shoppingCart = getById(shoppingCartId);
+        return shoppingCart;
     }
 
     private ShoppingCart getShoppingCartByUser(String username) {
@@ -56,7 +59,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 shoppingCart = new ShoppingCart();
             } else {
                 Integer shoppingCartId = (Integer) httpSession.getAttribute("shoppingCartId");
-                shoppingCart = this.get(shoppingCartId);
+                shoppingCart = this.getById(shoppingCartId);
             }
             shoppingCart.setUser(user);
             return shoppingCart;
@@ -64,7 +67,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCart get(int id) {
+    public ShoppingCart getById(int id) {
         return shoppingCartRepository.findById(id).orElse(new ShoppingCart());
     }
 
@@ -81,20 +84,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void addProduct(Product product) {
+        if (shoppingCart == null) { shoppingCart = createOrGet(); }
         shoppingCart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct() == product)
                 .findFirst()
                 .ifPresentOrElse(cartItem -> {
                     cartItem.setQuantity(cartItem.getQuantity() + 1);
-                    cartItem.setTotalItemPrice(product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
 
                 }, () -> {
                     ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
                     shoppingCartItem.setProduct(product);
                     shoppingCartItem.setQuantity(1);
-                    shoppingCartItem.setTotalItemPrice(product.getPrice().multiply(BigDecimal.valueOf(shoppingCartItem.getQuantity())));
                     shoppingCart.getCartItems().add(shoppingCartItem);
                 });
+
     }
 
     @Override
@@ -114,7 +117,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                         ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
                         shoppingCartItem.setProduct(product);
                         shoppingCartItem.setQuantity(quantity);
-                        shoppingCartItem.setTotalItemPrice(product.getPrice().multiply(BigDecimal.valueOf(shoppingCartItem.getQuantity())));
                         shoppingCart.getCartItems().add(shoppingCartItem);
                     });
         }

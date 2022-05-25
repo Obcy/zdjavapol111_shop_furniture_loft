@@ -25,8 +25,15 @@ public class Product {
 
     private BigDecimal price;
 
+    @Transient
+    private BigDecimal displayPrice;
+
+
+
     @Enumerated(EnumType.STRING)
     private ProductType productType;
 
     private String author;
+
+
 }

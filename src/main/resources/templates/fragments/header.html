@@ -32,7 +32,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/productList/USD" class="nav-link text-secondary text-center">
+                        <a th:href="@{/products}" class="nav-link text-secondary text-center">
                             <i class="fa-solid fa-list fa-2x d-block"></i>
                             Products
                         </a>
@@ -45,19 +45,28 @@
                     </li>
 
                     <li>
-                        <div th:each="currency : ${options}">
-                            <a th:href="@{'/productList/' + ${currency}}" th:text="${currency}"></a>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle ms-1 mt-3" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" th:text="${displayCurrency}">
+                                Dropdown button
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li th:each="currency : ${options}">
+                                    <a class="dropdown-item" th:href="@{'/switchCurrency/' + ${currency}}" th:text="${currency}"></a>
+                                </li>
+                            </ul>
                         </div>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="px-3 py-2 border-bottom mb-3">
+    <div class="px-3 py-2">
         <div class="container d-flex flex-wrap justify-content-center">
             <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" method="get" th:action="@{/search}">
-                <input type="search" class="form-control" placeholder="Search..." aria-label="Search" id="search" name="search">
-                <button type="submit">Search</button>
+                <div class="input-group mb-3">
+                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search" id="search" name="search">
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
+                </div>
             </form>
 
             <div sec:authorize="isAuthenticated()">
