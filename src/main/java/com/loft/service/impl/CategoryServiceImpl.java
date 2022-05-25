@@ -18,5 +18,15 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> getAll() {
         return categoryRepository.findAll();
     }
+
+    @Override
+    public List<Category> getParents() {
+        return categoryRepository.getCategoryByParent(null);
+    }
+
+    @Override
+    public Category getById(Integer id) {
+        return categoryRepository.getById(id);
+    }
 }
 
