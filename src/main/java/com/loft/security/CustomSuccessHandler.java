@@ -19,7 +19,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {
             switch (grantedAuthority.getAuthority()) {
                 case "ROLE_ADMIN": new DefaultRedirectStrategy().sendRedirect(request, response, "/"); break;
-                case "ROLE_USER": new DefaultRedirectStrategy().sendRedirect(request, response, "/"); break;
+                case "ROLE_USER": new DefaultRedirectStrategy().sendRedirect(request, response, "/panel"); break;
                 default: throw new IllegalStateException("Unrecognized role " + grantedAuthority.getAuthority());
             }
         }
