@@ -6,8 +6,8 @@ import com.loft.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -29,4 +29,13 @@ public class OrderServiceImpl implements OrderService {
     public void save(Order order) {
         orderRepository.save(order);
     }
+
+    @Override
+    public BigDecimal getTotal(Order order) {
+        return order.getOrderItems().stream()
+                .map(orderItem -> orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+    }
+
 }

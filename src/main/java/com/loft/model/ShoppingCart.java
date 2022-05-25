@@ -10,6 +10,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@Table(name = "shopping_cart")
 @NoArgsConstructor
 public class ShoppingCart {
 
@@ -18,14 +19,11 @@ public class ShoppingCart {
     private Integer id;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "shoppingCartId")
+    @JoinColumn(name = "shopping_cart_id")
     private Set<ShoppingCartItem> cartItems = new HashSet<>();
 
     @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="userId")
+    @JoinColumn(name="user_id")
     private User user;
-
-
-
 
 }

@@ -66,19 +66,33 @@
                             </div>
                         </div>
                         <!-- Single item -->
-
                         <hr class="my-4" />
-
 
                     </div>
                 </div>
                 <div class="card mb-4">
                     <div class="card-body">
-                        <p><strong>Expected shipping delivery</strong></p>
-                        <p class="mb-0">TODO</p>
+                        <p><strong>Billing data</strong></p>
+                        <p class="mb-0" th:text="${order.getBillingInfo().billingName}"></p>
+                        <p class="mb-0" th:text="${order.getBillingInfo().billingCompanyName}"></p>
+                        <p class="mb-0" th:text="${order.getBillingInfo().billingTaxId}"></p>
+                        <p class="mb-0" th:text="${order.getBillingInfo().billingCity}"></p>
+                        <p class="mb-0" th:text="${order.getBillingInfo().billingPostalCode}"></p>
+                        <p class="mb-0" th:text="${order.getBillingInfo().billingStreet} + ' ' + ${order.getBillingInfo().billingHouseNumber} + ' ' + ${order.getBillingInfo().billingFlatNumber}"></p>
+                        <p class="mb-0" th:text="${order.getBillingInfo().billingCountry}"></p>
                     </div>
                 </div>
 
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <p><strong>Delivery data</strong></p>
+                        <p class="mb-0" th:text="${order.getDeliveryInfo().deliveryName}"></p>
+                        <p class="mb-0" th:text="${order.getDeliveryInfo().deliveryCity}"></p>
+                        <p class="mb-0" th:text="${order.getDeliveryInfo().deliveryPostalCode}"></p>
+                        <p class="mb-0" th:text="${order.getDeliveryInfo().deliveryStreet} + ' ' + ${order.getDeliveryInfo().deliveryHouseNumber} + ' ' + ${order.getDeliveryInfo().deliveryFlatNumber}"></p>
+                        <p class="mb-0" th:text="${order.getDeliveryInfo().deliveryCountry}"></p>
+                    </div>
+                </div>
             </div>
             <div class="col-md-4">
                 <div class="card mb-4">

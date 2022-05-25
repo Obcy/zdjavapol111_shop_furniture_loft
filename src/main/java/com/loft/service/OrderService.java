@@ -2,6 +2,7 @@ package com.loft.service;
 
 import com.loft.model.Order;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,4 +16,5 @@ public interface OrderService {
     void save(Order order);
 
 
+    BigDecimal getTotal(Order order);
 }

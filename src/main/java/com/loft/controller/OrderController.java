@@ -36,6 +36,7 @@ public class OrderController {
 
         Order order = orderService.findByOrderKey(orderKey);
         modelMap.addAttribute("order", order);
+        modelMap.addAttribute("totalPrice", orderService.getTotal(order));
 
         return "order";
     }
