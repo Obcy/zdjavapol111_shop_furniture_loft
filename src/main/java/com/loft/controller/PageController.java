@@ -6,10 +6,15 @@ import com.loft.model.ShoppingCart;
 import com.loft.service.ShoppingCartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,11 +35,37 @@ public class PageController {
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         modelMap.addAttribute("currentUser", currentUser);
 
-        List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
-        List<String> options = currencyRates.stream().map(currencyRate -> currencyRate.getCode()).collect(Collectors.toList());
-        modelMap.addAttribute("options", options);
+        addDefaultsToModelMap(modelMap);
 
         return "index";
+    }
+
+    @GetMapping("/switchCurrency/{code}")
+    String switchDisplayCurrency(@PathVariable String code, @RequestHeader String referer) {
+        currencyRateService.switchDisplayCurrency(code);
+        return "redirect:"+ referer;
+    }
+
+    @GetMapping("/panel")
+    String showUserPanel(ModelMap modelMap) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.isAuthenticated()) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "You are not allowed to view this page."
+            );
+        }
+        addDefaultsToModelMap(modelMap);
+        String currentUser = authentication.getName();
+        modelMap.addAttribute("userName", currentUser);
+
+        return "panel";
+    }
+
+    private void addDefaultsToModelMap(ModelMap modelMap) {
+        modelMap.addAttribute("displayCurrency", currencyRateService.getDisplayCurrency());
+        List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
+        List<String> options = currencyRates.stream().map(CurrencyRate::getCode).collect(Collectors.toList());
+        modelMap.addAttribute("options", options);
     }
 
 }

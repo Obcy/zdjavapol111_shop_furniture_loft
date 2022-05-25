@@ -24,33 +24,42 @@ public class ProductServiceImpl implements ProductService {
     private CurrencyRateService currencyRateService;
 
     @Override
-    public List<Product> getAll(String currencyCode) {
+    public List<Product> getAll() {
         List<Product> products = productRepository.findAll();
+
+        products.forEach(this::calculateDisplayPrice);
+        return products;
+    }
+
+    private void calculateDisplayPrice(Product product) {
+        String currencyCode = currencyRateService.getDisplayCurrency();
         if (currencyCode.equals("PLN")) {
-            return products;
+            product.setDisplayPrice(product.getPrice());
+            return;
         }
-
         LocalDate date = LocalDate.now();
-
         Optional<CurrencyRate> optionalCurrencyRate = currencyRateService.getCurrencyRateByDate(date, currencyCode);
 
         if (optionalCurrencyRate.isEmpty()) {
             currencyRateService.createCurrencyRate(currencyCode);
             optionalCurrencyRate = currencyRateService.getCurrencyRateByDate(date, currencyCode);
         }
-        CurrencyRate currencyRate = optionalCurrencyRate.get();
-        products.stream().forEach(product -> product.setPrice(product.getPrice().divide(currencyRate.getCurrency(), RoundingMode.CEILING)));
-        return products;
+        optionalCurrencyRate.ifPresent(currencyRate -> product.setDisplayPrice(product.getPrice().divide(currencyRate.getCurrency(), RoundingMode.CEILING)));
+
     }
 
     @Override
     public List<Product> findByPhrase(String search) {
-        return productRepository.findByTitleOrDescriptionContainingAllIgnoreCase(search, search);
+        List<Product> products = productRepository.findByTitleOrDescriptionContainingAllIgnoreCase(search, search);
+        products.forEach(this::calculateDisplayPrice);
+        return products;
     }
 
     @Override
     public Product getById(Integer id) {
-        return productRepository.getById(id);
+        Product product = productRepository.getById(id);
+        calculateDisplayPrice(product);
+        return product;
     }
 
     @Override
@@ -63,6 +72,7 @@ public class ProductServiceImpl implements ProductService {
                 .flatMap(child -> getByCategory(child).stream())
                 .collect(Collectors.toList()));
 
+        products.forEach(this::calculateDisplayPrice);
         return products;
     }
 

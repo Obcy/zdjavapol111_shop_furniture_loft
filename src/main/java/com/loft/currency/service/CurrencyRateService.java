@@ -11,4 +11,8 @@ public interface CurrencyRateService {
     void createCurrencyRate(String code);
     List<CurrencyRate> getCurrentRateByDate(LocalDate date);
     Optional<CurrencyRate> getCurrencyRateByDate(LocalDate date, String code);
+
+    void switchDisplayCurrency(String code);
+
+    String getDisplayCurrency();
 }

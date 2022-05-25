@@ -15,13 +15,19 @@ public class ShoppingCartItem {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
 
     private int quantity;
 
+    @Transient
     private BigDecimal totalItemPrice = BigDecimal.ZERO;
+
+    @PostLoad
+    public void onPostLoad() {
+        totalItemPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+    }
 
 
 }

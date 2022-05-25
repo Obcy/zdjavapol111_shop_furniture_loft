@@ -9,6 +9,7 @@ import com.loft.model.Product;
 import com.loft.model.ShoppingCart;
 import com.loft.service.ProductService;
 import com.loft.service.ShoppingCartService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 public class CartController {
 
@@ -46,9 +48,7 @@ public class CartController {
         modelMap.addAttribute("cartItems", shoppingCart.getCartItems());
         modelMap.addAttribute("totalPrice", shoppingCartService.getTotal());
 
-        List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
-        List<String> options = currencyRates.stream().map(currencyRate -> currencyRate.getCode()).collect(Collectors.toList());
-        modelMap.addAttribute("options", options);
+        addDefaultsToModelMap(modelMap);
 
         return "cart";
     }
@@ -59,9 +59,7 @@ public class CartController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
-        List<String> options = currencyRates.stream().map(currencyRate -> currencyRate.getCode()).collect(Collectors.toList());
-        modelMap.addAttribute("options", options);
+        addDefaultsToModelMap(modelMap);
 
         BillingInfo billingInfo = new BillingInfo();
         DeliveryInfo deliveryInfo = new DeliveryInfo();
@@ -86,7 +84,6 @@ public class CartController {
                 .ifPresent(shoppingCartItem -> shoppingCartService.removeProduct(shoppingCartItem.getProduct()));
 
         return "redirect:/cart";
-
     }
 
     @GetMapping(path = "/cart/add/{id}")
@@ -101,12 +98,20 @@ public class CartController {
         }
 
         ShoppingCart shoppingCart = shoppingCartService.createOrGet();
+
         shoppingCartService.addProduct(product);
         shoppingCartService.save(shoppingCart);
 
         return "redirect:/cart";
 
 
+    }
+
+    private void addDefaultsToModelMap(ModelMap modelMap) {
+        modelMap.addAttribute("displayCurrency", currencyRateService.getDisplayCurrency());
+        List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
+        List<String> options = currencyRates.stream().map(CurrencyRate::getCode).collect(Collectors.toList());
+        modelMap.addAttribute("options", options);
     }
 
 }

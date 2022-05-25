@@ -18,7 +18,7 @@ public class ShoppingCart {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "")
     @JoinColumn(name = "shopping_cart_id")
     private Set<ShoppingCartItem> cartItems = new HashSet<>();
 

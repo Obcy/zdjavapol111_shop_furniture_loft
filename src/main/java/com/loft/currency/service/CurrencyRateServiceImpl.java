@@ -3,13 +3,17 @@ package com.loft.currency.service;
 import com.loft.currency.model.CurrencyRate;
 import com.loft.currency.model.Dto.CurrencyRateDto;
 import com.loft.currency.repository.CurrencyRateRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class CurrencyRateServiceImpl implements CurrencyRateService {
 
@@ -19,6 +23,8 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
     @Autowired
     private NBPGateway nbpGateway;
 
+    @Autowired
+    private HttpSession httpSession;
 
     @Override
     public void createCurrencyRate(String code) {
@@ -32,13 +38,38 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
 
     @Override
     public List<CurrencyRate> getCurrentRateByDate(LocalDate date) {
-        return currencyRateRepository.findAllByDate(date);
+        CurrencyRate ratePLN = new CurrencyRate();
+        ratePLN.setDate(LocalDate.now());
+        ratePLN.setCode("PLN");
+        ratePLN.setCurrency(BigDecimal.ONE);
+        List<CurrencyRate> allByDate = currencyRateRepository.findAllByDate(date);
+        allByDate.add(ratePLN);
+
+        return allByDate;
     }
 
     @Override
     public Optional<CurrencyRate> getCurrencyRateByDate(LocalDate date, String code) {
         return currencyRateRepository.findByDateAndCode(date, code);
 
+    }
+
+    @Override
+    public void switchDisplayCurrency(String code) {
+        if (code.equals("PLN")) {
+            httpSession.setAttribute("displayCurrency", code);
+        }
+        Optional<CurrencyRate> optionalCurrencyRate = getCurrencyRateByDate(LocalDate.now(), code);
+        optionalCurrencyRate.ifPresent(currencyRate -> httpSession.setAttribute("displayCurrency", code));
+    }
+
+    @Override
+    public String getDisplayCurrency() {
+        if (httpSession.getAttribute("displayCurrency") == null) {
+            return "PLN";
+        } else {
+            return (String) httpSession.getAttribute("displayCurrency");
+        }
     }
 
 }

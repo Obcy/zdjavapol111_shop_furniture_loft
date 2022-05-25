@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public interface ShoppingCartService {
 
     ShoppingCart createOrGet();
-    ShoppingCart get(int id);
+    ShoppingCart getById(int id);
     ShoppingCart getByUserId(int userId);
     void save(ShoppingCart shoppingCart);
 
