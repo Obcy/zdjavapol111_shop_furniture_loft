@@ -2,6 +2,7 @@ package com.loft.service.impl;
 
 import com.loft.currency.model.CurrencyRate;
 import com.loft.currency.service.CurrencyRateService;
+import com.loft.model.Category;
 import com.loft.model.Product;
 import com.loft.repository.ProductRepository;
 import com.loft.service.ProductService;
@@ -12,6 +13,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -50,4 +52,19 @@ public class ProductServiceImpl implements ProductService {
     public Product getById(Integer id) {
         return productRepository.getById(id);
     }
+
+    @Override
+    public List<Product> getByCategory(Category category) {
+
+
+        List<Product> products = productRepository.getAllByCategoryId(category.getId());
+
+        products.addAll(category.getChildren().stream()
+                .flatMap(child -> getByCategory(child).stream())
+                .collect(Collectors.toList()));
+
+        return products;
+    }
+
+
 }
