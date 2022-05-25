@@ -10,4 +10,5 @@ public interface ProductService {
 
     List<Product> findByPhrase(String search);
 
+    Product getById(Integer id);
 }
