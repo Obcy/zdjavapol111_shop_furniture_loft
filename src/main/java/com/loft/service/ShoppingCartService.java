@@ -22,4 +22,6 @@ public interface ShoppingCartService {
 
     BigDecimal getTotal();
 
+    void delete(ShoppingCart shoppingCart);
+
 }

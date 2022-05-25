@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 @Entity
+@Table(name = "shopping_cart_item")
 @NoArgsConstructor
 public class ShoppingCartItem {
 

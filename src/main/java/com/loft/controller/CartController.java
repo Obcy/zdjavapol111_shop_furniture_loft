@@ -2,12 +2,18 @@ package com.loft.controller;
 
 import com.loft.currency.model.CurrencyRate;
 import com.loft.currency.service.CurrencyRateService;
+import com.loft.model.BillingInfo;
+import com.loft.model.DeliveryInfo;
 import com.loft.model.Product;
+
 import com.loft.model.ShoppingCart;
 import com.loft.service.ProductService;
 import com.loft.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -47,8 +53,31 @@ public class CartController {
         return "cart";
     }
 
-    @GetMapping(path = "/cart/remove/{id}")
-    public String removeProduct(@PathVariable Integer id) {
+
+    @GetMapping("/checkout")
+    public String showCheckOutForm(ModelMap modelMap) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        List<CurrencyRate> currencyRates = currencyRateService.getCurrentRateByDate(LocalDate.now());
+        List<String> options = currencyRates.stream().map(currencyRate -> currencyRate.getCode()).collect(Collectors.toList());
+        modelMap.addAttribute("options", options);
+
+        BillingInfo billingInfo = new BillingInfo();
+        DeliveryInfo deliveryInfo = new DeliveryInfo();
+
+        modelMap.addAttribute("billingInfo", billingInfo);
+        modelMap.addAttribute("deliveryInfo", deliveryInfo);
+
+        ShoppingCart shoppingCart = shoppingCartService.createOrGet();
+        modelMap.addAttribute("cartItems", shoppingCart.getCartItems());
+        modelMap.addAttribute("totalPrice", shoppingCartService.getTotal());
+
+        return "checkout-form";
+    }
+
+  @GetMapping(path = "/cart/remove/{id}")
+  public String removeProduct(@PathVariable Integer id) {
 
         ShoppingCart shoppingCart = shoppingCartService.createOrGet();
         shoppingCart.getCartItems().stream()
@@ -76,6 +105,7 @@ public class CartController {
         shoppingCartService.save(shoppingCart);
 
         return "redirect:/cart";
+
 
     }
 
