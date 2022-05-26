@@ -56,9 +56,9 @@ public class OrderController {
 
     @PostMapping("/order/checkout")
     public String handleCreateNewOrder(@ModelAttribute("billingInfo")BillingInfo billingInfo
-            , @ModelAttribute("deliveryInfo")DeliveryInfo deliveryInfo, @RequestParam(value = "sameAsDelivery", required = true) String sameAsDelivery) {
+            , @ModelAttribute("deliveryInfo")DeliveryInfo deliveryInfo, @RequestParam(value = "sameAsDelivery", required = false) String sameAsDelivery) {
 
-        if (sameAsDelivery.equals("on")) {
+        if (sameAsDelivery != null && sameAsDelivery.equals("on")) {
             deliveryInfo.setDeliveryName(billingInfo.getBillingName());
             deliveryInfo.setDeliveryCity(billingInfo.getBillingCity());
             deliveryInfo.setDeliveryPostalCode(billingInfo.getBillingPostalCode());

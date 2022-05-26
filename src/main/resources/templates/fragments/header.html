@@ -70,6 +70,7 @@
             </form>
 
             <div sec:authorize="isAuthenticated()">
+                <a class="btn btn-light text-dark me-2" th:href="@{/panel}">User panel</a>
                 <a class="btn btn-light text-dark me-2" th:href="@{/logout}">Logout</a>
             </div>
             <div class="text-end"  sec:authorize="isAnonymous()">
