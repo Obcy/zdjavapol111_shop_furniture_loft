@@ -26,4 +26,6 @@ public class ShoppingCart {
     @JoinColumn(name="user_id")
     private User user;
 
+
+
 }

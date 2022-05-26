@@ -24,4 +24,5 @@ public interface ShoppingCartService {
 
     void delete(ShoppingCart shoppingCart);
 
+    void calculateDisplayPrice(ShoppingCart shoppingCart);
 }

@@ -45,6 +45,7 @@ public class CartController {
         modelMap.addAttribute("currentUser", currentUser);
 
         ShoppingCart shoppingCart = shoppingCartService.createOrGet();
+        shoppingCartService.calculateDisplayPrice(shoppingCart);
         modelMap.addAttribute("cartItems", shoppingCart.getCartItems());
         modelMap.addAttribute("totalPrice", shoppingCartService.getTotal());
 

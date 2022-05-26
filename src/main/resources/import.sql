@@ -12,7 +12,7 @@ insert into category (name, id) values ('Stoły', 2);
 insert into category (name, id, parent_id) values ('Stoły rozkładane', 3, 2);
 insert into category (name, id, parent_id) values ('Stoliki', 4, 2);
 insert into category (name, id, parent_id) values ('Szafki RTV', 5, 2);
-insert into category (name, id) values ('Regały', 2);
+
 
 insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('Konsola', 'Konsola z półką to idealne rozwiązanie dla tych, którzy cenią sobie wysoką jakość oraz niezwykłą trwałość, a także świetne wykonanie,idealnie sprawdzi się w każdym salonie.', '/images/konsola-z-polka.jpg', 1, 1450.00, '', 'HOME');
 insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('Konsola z półką', 'Konsola z półką to idealne rozwiązanie dla tych, którzy cenią sobie wysoką jakość oraz niezwykłą trwałość, a także świetne wykonanie,idealnie sprawdzi się w każdym salonie.', '/images/konsola-z-polka2.jpg', 1, 1750.00, '', 'HOME');
