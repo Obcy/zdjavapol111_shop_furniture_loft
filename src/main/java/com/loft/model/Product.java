@@ -28,7 +28,10 @@ public class Product {
     @Transient
     private BigDecimal displayPrice;
 
-
+    @PostLoad
+    public void onPostLoad() {
+        displayPrice = getPrice();
+    }
 
     @Enumerated(EnumType.STRING)
     private ProductType productType;

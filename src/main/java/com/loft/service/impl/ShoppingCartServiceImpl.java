@@ -1,5 +1,7 @@
 package com.loft.service.impl;
 
+import com.loft.currency.model.CurrencyRate;
+import com.loft.currency.service.CurrencyRateService;
 import com.loft.model.Product;
 import com.loft.model.ShoppingCart;
 import com.loft.model.ShoppingCartItem;
@@ -14,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -24,6 +29,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CurrencyRateService currencyRateService;
 
     private ShoppingCart shoppingCart;
 
@@ -83,7 +91,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void addProduct(Product product) {
-        if (shoppingCart == null) { shoppingCart = createOrGet(); }
+        if (shoppingCart == null) {
+            shoppingCart = createOrGet();
+        }
         shoppingCart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct() == product)
                 .findFirst()
@@ -123,17 +133,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void changeProductQuantityById(int id, int quantity) {
 
-            shoppingCart.getCartItems().stream()
-                    .filter(cartItem -> cartItem.getProduct().getId() == id)
-                    .findFirst()
-                    .ifPresent(cartItem -> this.changeProductQuantity(cartItem.getProduct(), quantity));
+        shoppingCart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getProduct().getId() == id)
+                .findFirst()
+                .ifPresent(cartItem -> this.changeProductQuantity(cartItem.getProduct(), quantity));
 
     }
 
     @Override
     public BigDecimal getTotal() {
+        calculateDisplayPrice(shoppingCart);
         return shoppingCart.getCartItems().stream()
-                .map(cartItem -> cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
+                .map(cartItem -> cartItem.getProduct().getDisplayPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
     }
@@ -142,4 +153,30 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void delete(ShoppingCart shoppingCart) {
         shoppingCartRepository.delete(shoppingCart);
     }
+
+    @Override
+    public void calculateDisplayPrice(ShoppingCart shoppingCart) {
+
+        String currencyCode = currencyRateService.getDisplayCurrency();
+        if (currencyCode.equals("PLN")) {
+            shoppingCart.getCartItems().forEach(shoppingCartItem -> {
+                shoppingCartItem.getProduct().setDisplayPrice(shoppingCartItem.getProduct().getPrice());
+                shoppingCartItem.setTotalItemPrice(shoppingCartItem.getProduct().getDisplayPrice().multiply(BigDecimal.valueOf(shoppingCartItem.getQuantity())));
+            });
+            return;
+        }
+        LocalDate date = LocalDate.now();
+        Optional<CurrencyRate> optionalCurrencyRate = currencyRateService.getCurrencyRateByDate(date, currencyCode);
+
+        if (optionalCurrencyRate.isEmpty()) {
+            currencyRateService.createCurrencyRate(currencyCode);
+            optionalCurrencyRate = currencyRateService.getCurrencyRateByDate(date, currencyCode);
+        }
+        optionalCurrencyRate.ifPresent(currencyRate -> shoppingCart.getCartItems().forEach(shoppingCartItem -> {
+            shoppingCartItem.getProduct().setDisplayPrice(shoppingCartItem.getProduct().getPrice().divide(currencyRate.getCurrency(), RoundingMode.CEILING));
+            shoppingCartItem.setTotalItemPrice(shoppingCartItem.getProduct().getDisplayPrice().multiply(BigDecimal.valueOf(shoppingCartItem.getQuantity())));
+        }));
+
+    }
 }
+

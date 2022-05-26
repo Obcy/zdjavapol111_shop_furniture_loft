@@ -24,10 +24,10 @@ public class ShoppingCartItem {
     @Transient
     private BigDecimal totalItemPrice = BigDecimal.ZERO;
 
+
     @PostLoad
     public void onPostLoad() {
         totalItemPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
     }
-
 
 }
