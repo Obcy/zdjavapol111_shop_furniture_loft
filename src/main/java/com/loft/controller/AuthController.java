@@ -7,6 +7,7 @@ import com.loft.model.User;
 import com.loft.service.AutoLoginService;
 import com.loft.service.OrderService;
 import com.loft.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 public class AuthController {
 
@@ -96,8 +98,11 @@ public class AuthController {
         User user = userService.findByEmailAddress(currentUser);
 
 
+        log.info("user: " + user.getId());
+
         modelMap.addAttribute("userName", currentUser);
         List<Order> orders = orderService.findByUserId(user.getId());
+
         modelMap.addAttribute("orders", orders);
 
         return "panel";

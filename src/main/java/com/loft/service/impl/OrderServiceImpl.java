@@ -22,7 +22,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findByUserId(Integer userId) {
-        return null;
+        return orderRepository.findByUserId(userId);
     }
 
     @Override

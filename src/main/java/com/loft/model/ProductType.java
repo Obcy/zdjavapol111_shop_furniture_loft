@@ -5,6 +5,7 @@ public enum ProductType {
 
     GARDEN_FURNITURE,
     KITCHEN,
-    LIVING_ROOM
+    LIVING_ROOM,
+    HOME
 
 }
