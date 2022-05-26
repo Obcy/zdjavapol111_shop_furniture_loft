@@ -20,7 +20,7 @@ public class ApiController {
                               @RequestParam(value = "quantity", required = true) int quantity) {
 
         ShoppingCart shoppingCart = shoppingCartService.createOrGet();
-        shoppingCartService.changeProductByIdQuantity(id, quantity);
+        shoppingCartService.changeProductQuantityById(id, quantity);
         shoppingCartService.save(shoppingCart);
 
     }

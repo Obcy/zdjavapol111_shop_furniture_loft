@@ -53,7 +53,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         User user = userService.findByEmailAddress(username);
         if (shoppingCartRepository.existsByUserId(user.getId())) {
             shoppingCart = this.getByUserId(user.getId());
-            return shoppingCart;
         } else {
             if (httpSession.getAttribute("shoppingCartId") == null) {
                 shoppingCart = new ShoppingCart();
@@ -62,8 +61,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 shoppingCart = this.getById(shoppingCartId);
             }
             shoppingCart.setUser(user);
-            return shoppingCart;
         }
+        return shoppingCart;
     }
 
     @Override
@@ -90,7 +89,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .findFirst()
                 .ifPresentOrElse(cartItem -> {
                     cartItem.setQuantity(cartItem.getQuantity() + 1);
-
                 }, () -> {
                     ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
                     shoppingCartItem.setProduct(product);
@@ -123,7 +121,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void changeProductByIdQuantity(int id, int quantity) {
+    public void changeProductQuantityById(int id, int quantity) {
 
             shoppingCart.getCartItems().stream()
                     .filter(cartItem -> cartItem.getProduct().getId() == id)

@@ -18,7 +18,7 @@ public interface ShoppingCartService {
 
     void changeProductQuantity(Product product, int quantity);
 
-    void changeProductByIdQuantity(int id, int quantity);
+    void changeProductQuantityById(int id, int quantity);
 
     BigDecimal getTotal();
 
