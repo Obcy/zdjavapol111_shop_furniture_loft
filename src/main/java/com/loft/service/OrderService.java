@@ -17,4 +17,6 @@ public interface OrderService {
 
 
     BigDecimal getTotal(Order order);
+
+    void calculateDisplayPrice(Order order);
 }

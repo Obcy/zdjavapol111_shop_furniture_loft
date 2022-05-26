@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -33,9 +34,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public BigDecimal getTotal(Order order) {
         return order.getOrderItems().stream()
-                .map(orderItem -> orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .map(orderItem -> orderItem.getDisplayPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
+    }
+
+    @Override
+    public void calculateDisplayPrice(Order order) {
+        order.getOrderItems().forEach(orderItem -> orderItem.setDisplayPrice(orderItem.getPrice().divide(order.getCurrencyRate(), RoundingMode.CEILING)));
     }
 
 }

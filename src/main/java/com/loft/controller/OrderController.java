@@ -17,8 +17,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -42,27 +44,10 @@ public class OrderController {
     public String showOrderWithIdAndKey(@PathVariable String orderKey, ModelMap modelMap) {
 
         Order order = orderService.findByOrderKey(orderKey);
+        orderService.calculateDisplayPrice(order);
         modelMap.addAttribute("order", order);
         modelMap.addAttribute("totalPrice", orderService.getTotal(order));
 
-        addDefaultsToModelMap(modelMap);
-
-        return "order";
-    }
-
-    @GetMapping("/order/new")
-    public String newOrder(ModelMap modelMap) {
-
-        Order order = new Order();
-        OrderItem orderItem = new OrderItem();
-        orderItem.setPrice(BigDecimal.valueOf(159));
-        orderItem.setProductName("Sofa");
-        orderItem.setQuantity(2);
-        order.getOrderItems().add(orderItem);
-
-        orderService.save(order);
-
-        modelMap.addAttribute("order", order);
 
         addDefaultsToModelMap(modelMap);
 
@@ -83,13 +68,33 @@ public class OrderController {
             deliveryInfo.setDeliveryCountry(billingInfo.getBillingCountry());
         }
 
+
+
         Order order = new Order();
+
+        String currencyCode = currencyRateService.getDisplayCurrency();
+        if (currencyCode.equals("PLN")) {
+            order.setCurrencyCode("PLN");
+            order.setCurrencyRate(BigDecimal.ONE);
+        } else {
+            Optional<CurrencyRate> optionalCurrencyRate = currencyRateService.getCurrencyRateByDate(LocalDate.now(), currencyCode);
+            if (optionalCurrencyRate.isEmpty()) {
+                currencyRateService.createCurrencyRate(currencyCode);
+                optionalCurrencyRate = currencyRateService.getCurrencyRateByDate(LocalDate.now(), currencyCode);
+            }
+            optionalCurrencyRate.ifPresent(currencyRate -> order.setCurrencyRate(currencyRate.getCurrency()));
+            order.setCurrencyCode(currencyCode);
+
+        }
+
         ShoppingCart shoppingCart = shoppingCartService.createOrGet();
+        shoppingCartService.calculateDisplayPrice(shoppingCart);
         order.setOrderItems(shoppingCart.getCartItems().stream().map(shoppingCartItem -> {
                     OrderItem orderItem = new OrderItem();
                     orderItem.setQuantity(shoppingCartItem.getQuantity());
                     orderItem.setProductName(shoppingCartItem.getProduct().getTitle());
                     orderItem.setPrice(shoppingCartItem.getProduct().getPrice());
+                    orderItem.setDisplayPrice(shoppingCartItem.getProduct().getDisplayPrice());
                     return orderItem;  })
                 .collect(Collectors.toSet()));
         order.setBillingInfo(billingInfo);

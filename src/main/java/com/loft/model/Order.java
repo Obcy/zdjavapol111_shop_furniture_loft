@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -45,6 +46,10 @@ public class Order {
     private Date createDate;
 
     private OrderStatus orderStatus = OrderStatus.NEW;
+
+    private String currencyCode = "PLN";
+
+    private BigDecimal currencyRate = BigDecimal.ONE;
 
     @Embedded
     private DeliveryInfo deliveryInfo;
