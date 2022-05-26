@@ -2,10 +2,13 @@ package com.loft.controller;
 
 import com.loft.currency.model.CurrencyRate;
 import com.loft.currency.service.CurrencyRateService;
+import com.loft.model.Order;
 import com.loft.model.User;
 import com.loft.service.AutoLoginService;
+import com.loft.service.OrderService;
 import com.loft.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -14,6 +17,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +37,9 @@ public class AuthController {
 
     @Autowired
     private AutoLoginService autologinService;
+
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/login")
     public String login(ModelMap modelMap) {
@@ -73,6 +80,27 @@ public class AuthController {
 
         return "redirect:/panel";
 
+    }
+
+    @GetMapping("/panel")
+    String showUserPanel(ModelMap modelMap) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.isAuthenticated()) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "You are not allowed to view this page."
+            );
+        }
+        addDefaultsToModelMap(modelMap);
+        String currentUser = authentication.getName();
+
+        User user = userService.findByEmailAddress(currentUser);
+
+
+        modelMap.addAttribute("userName", currentUser);
+        List<Order> orders = orderService.findByUserId(user.getId());
+        modelMap.addAttribute("orders", orders);
+
+        return "panel";
     }
 
     private void addDefaultsToModelMap(ModelMap modelMap) {
