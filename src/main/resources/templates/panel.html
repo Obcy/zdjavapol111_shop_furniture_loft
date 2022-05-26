@@ -27,17 +27,29 @@
         <div class="row justify-content-center mb-3">
             <div class="col-md-10 col-xl-10">
                 <div class="card shadow-0 border rounded-3">
-                    <p class="h6 text-center m-4">Witaj <span th:text="${userName}"></span>.</p>
+                    <p class="h6 text-center m-4">Welcome <span th:text="${userName}"></span>.</p>
                 </div>
             </div>
         </div>
         <div class="card shadow-0 border rounded-3">
             <div class="card-body">
                 <div class="row">
-                    TODO: LISTA ZAMOWIEN
+                    Order list:
                 </div>
             </div>
-    </div>
+        </div>
+        <div class="card shadow-0 border rounded-3" th:each="order : ${orders}">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <a th:href="@{/order/{key} (key=${order.orderKey})}" th:text="${order.orderNumber}"></a>
+                    </div>
+                    <div class="col-md-6">
+                        <a th:href="@{/order/{key} (key=${order.orderKey})}" th:text="${order.billingInfo.billingName}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     </div>

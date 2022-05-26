@@ -3,6 +3,8 @@ package com.loft.controller;
 import com.loft.currency.model.CurrencyRate;
 import com.loft.currency.service.CurrencyRateService;
 import com.loft.model.ShoppingCart;
+import com.loft.model.User;
+import com.loft.service.OrderService;
 import com.loft.service.ShoppingCartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class PageController {
     @Autowired
     private ShoppingCartService shoppingCartService;
 
+    @Autowired
+    private OrderService orderService;
+
     @GetMapping("/")
     public String homePage(ModelMap modelMap) {
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -46,20 +51,7 @@ public class PageController {
         return "redirect:"+ referer;
     }
 
-    @GetMapping("/panel")
-    String showUserPanel(ModelMap modelMap) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.isAuthenticated()) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, "You are not allowed to view this page."
-            );
-        }
-        addDefaultsToModelMap(modelMap);
-        String currentUser = authentication.getName();
-        modelMap.addAttribute("userName", currentUser);
 
-        return "panel";
-    }
 
     private void addDefaultsToModelMap(ModelMap modelMap) {
         modelMap.addAttribute("displayCurrency", currencyRateService.getDisplayCurrency());
