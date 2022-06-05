@@ -28,19 +28,19 @@ function updateTotalPrice() {
 }
 
 function updateCartItem(element) {
-    console.log(element);
+
 
     let cartItem = $(element).closest('.shoppingCartItem');
 
 
-    console.log(cartItem);
+
     let itemData = {
         id: parseInt(cartItem.find('input[name="itemId"]').val()),
         quantity: parseInt(cartItem.find('input[name="quantity"]').val())
     }
 
     $.ajax({
-        url: '/api/cartItemQuantity',
+        url: '/api/cart/updateItemQuantity',
         type: 'POST',
         data: itemData,
         success: function (response) {

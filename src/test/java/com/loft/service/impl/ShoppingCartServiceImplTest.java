@@ -1,5 +1,7 @@
 package com.loft.service.impl;
 
+import com.loft.currency.model.CurrencyRate;
+import com.loft.currency.service.CurrencyRateService;
 import com.loft.model.*;
 import com.loft.repository.ShoppingCartRepository;
 import com.loft.repository.UserRepository;
@@ -36,6 +38,9 @@ class ShoppingCartServiceImplTest {
 
     @Mock
     private UserServiceImpl userService;
+
+    @Mock
+    private CurrencyRateService currencyRateService;
 
     @Mock
     private UserRepository userRepository;
@@ -213,6 +218,7 @@ class ShoppingCartServiceImplTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         Mockito.when(SecurityContextHolder.getContext().getAuthentication().getName()).thenReturn("anonymousUser");
+        Mockito.when(currencyRateService.getDisplayCurrency()).thenReturn( "PLN" );
 
         Product product = new Product();
         product.setTitle("product");
@@ -227,6 +233,8 @@ class ShoppingCartServiceImplTest {
         shoppingCartService.addProduct(product);
         shoppingCartService.addProduct(product);
         shoppingCartService.addProduct(product2);
+
+
         //then
         assertThat(shoppingCartService.getTotal()).isEqualTo(BigDecimal.valueOf(12));
 

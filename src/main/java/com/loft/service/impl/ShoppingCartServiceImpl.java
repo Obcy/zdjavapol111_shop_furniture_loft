@@ -133,10 +133,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void changeProductQuantityById(int id, int quantity) {
 
+        if (shoppingCart == null) {
+            createOrGet();
+        }
+
         shoppingCart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct().getId() == id)
                 .findFirst()
                 .ifPresent(cartItem -> this.changeProductQuantity(cartItem.getProduct(), quantity));
+
+        save(shoppingCart);
 
     }
 
