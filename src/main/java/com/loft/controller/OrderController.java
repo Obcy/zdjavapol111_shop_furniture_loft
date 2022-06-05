@@ -57,8 +57,7 @@ public class OrderController {
     @PostMapping("/order/checkout")
     public String handleCreateNewOrder(@ModelAttribute("billingInfo")BillingInfo billingInfo
             , @ModelAttribute("deliveryInfo")DeliveryInfo deliveryInfo, @RequestParam(value = "sameAsDelivery", required = false) String sameAsDelivery) {
-
-        if (sameAsDelivery != null && sameAsDelivery.equals("on")) {
+        if ("on".equals(sameAsDelivery)) {
             deliveryInfo.setDeliveryName(billingInfo.getBillingName());
             deliveryInfo.setDeliveryCity(billingInfo.getBillingCity());
             deliveryInfo.setDeliveryPostalCode(billingInfo.getBillingPostalCode());
@@ -68,35 +67,18 @@ public class OrderController {
             deliveryInfo.setDeliveryCountry(billingInfo.getBillingCountry());
         }
 
-
-
         Order order = new Order();
 
+        CurrencyRate currencyRate = currencyRateService.findOrCreateCurrencyRate(LocalDate.now());
         String currencyCode = currencyRateService.getDisplayCurrency();
-        if (currencyCode.equals("PLN")) {
-            order.setCurrencyCode("PLN");
-            order.setCurrencyRate(BigDecimal.ONE);
-        } else {
-            Optional<CurrencyRate> optionalCurrencyRate = currencyRateService.getCurrencyRateByDate(LocalDate.now(), currencyCode);
-            if (optionalCurrencyRate.isEmpty()) {
-                currencyRateService.createCurrencyRate(currencyCode);
-                optionalCurrencyRate = currencyRateService.getCurrencyRateByDate(LocalDate.now(), currencyCode);
-            }
-            optionalCurrencyRate.ifPresent(currencyRate -> order.setCurrencyRate(currencyRate.getCurrency()));
-            order.setCurrencyCode(currencyCode);
-
-        }
+        order.setCurrencyRate(currencyRate.getCurrency());
+        order.setCurrencyCode(currencyCode);
 
         ShoppingCart shoppingCart = shoppingCartService.createOrGet();
         shoppingCartService.calculateDisplayPrice(shoppingCart);
-        order.setOrderItems(shoppingCart.getCartItems().stream().map(shoppingCartItem -> {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setQuantity(shoppingCartItem.getQuantity());
-                    orderItem.setProductName(shoppingCartItem.getProduct().getTitle());
-                    orderItem.setPrice(shoppingCartItem.getProduct().getPrice());
-                    orderItem.setDisplayPrice(shoppingCartItem.getProduct().getDisplayPrice());
-                    return orderItem;  })
-                .collect(Collectors.toSet()));
+        orderService.addItemsFromShoppingCart(order, shoppingCart);
+
+
         order.setBillingInfo(billingInfo);
         order.setDeliveryInfo(deliveryInfo);
         order.setOrderStatus(OrderStatus.NEW);
@@ -111,8 +93,6 @@ public class OrderController {
         orderService.save(order);
 
         shoppingCartService.delete(shoppingCart);
-
-
 
         return "redirect:/order/" + order.getOrderKey();
     }

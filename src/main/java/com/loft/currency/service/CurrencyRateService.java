@@ -15,4 +15,6 @@ public interface CurrencyRateService {
     void switchDisplayCurrency(String code);
 
     String getDisplayCurrency();
+
+    CurrencyRate findOrCreateCurrencyRate(LocalDate date);
 }

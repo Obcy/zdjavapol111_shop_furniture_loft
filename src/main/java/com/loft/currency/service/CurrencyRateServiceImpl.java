@@ -72,4 +72,23 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
         }
     }
 
+    @Override
+    public CurrencyRate findOrCreateCurrencyRate(LocalDate date) {
+        String currencyCode = getDisplayCurrency();
+        if ("PLN".equals(currencyCode)) {
+            CurrencyRate ratePLN = new CurrencyRate();
+            ratePLN.setDate(LocalDate.now());
+            ratePLN.setCode("PLN");
+            ratePLN.setCurrency(BigDecimal.ONE);
+            return ratePLN;
+        }
+        Optional<CurrencyRate> optionalCurrencyRate = getCurrencyRateByDate(LocalDate.now(), currencyCode);
+        if (optionalCurrencyRate.isEmpty()) {
+            createCurrencyRate(currencyCode);
+            optionalCurrencyRate = getCurrencyRateByDate(LocalDate.now(), currencyCode);
+        }
+        return optionalCurrencyRate.orElseThrow();
+
+    }
+
 }

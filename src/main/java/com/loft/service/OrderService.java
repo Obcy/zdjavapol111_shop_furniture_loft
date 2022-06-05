@@ -1,6 +1,7 @@
 package com.loft.service;
 
 import com.loft.model.Order;
+import com.loft.model.ShoppingCart;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,4 +20,6 @@ public interface OrderService {
     BigDecimal getTotal(Order order);
 
     void calculateDisplayPrice(Order order);
+
+    void addItemsFromShoppingCart(Order order, ShoppingCart shoppingCart);
 }
