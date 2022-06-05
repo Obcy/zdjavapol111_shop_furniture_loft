@@ -105,11 +105,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     shoppingCartItem.setQuantity(1);
                     shoppingCart.getCartItems().add(shoppingCartItem);
                 });
+        save(shoppingCart);
 
     }
 
     @Override
     public void removeProduct(Product product) {
+        if (shoppingCart == null) {
+            shoppingCart = createOrGet();
+        }
+
         shoppingCart.getCartItems().removeIf(cartItem -> cartItem.getProduct() == product);
     }
 

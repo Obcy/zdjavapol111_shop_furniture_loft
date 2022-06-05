@@ -40,9 +40,7 @@ public class CartController {
     private ProductService productService;
 
     @GetMapping("/cart")
-    public String cartPage(ModelMap modelMap) {
-        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        modelMap.addAttribute("currentUser", currentUser);
+    public String showCartPage(ModelMap modelMap) {
 
         ShoppingCart shoppingCart = shoppingCartService.createOrGet();
         shoppingCartService.calculateDisplayPrice(shoppingCart);
@@ -57,8 +55,6 @@ public class CartController {
 
     @GetMapping("/checkout")
     public String showCheckOutForm(ModelMap modelMap) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         addDefaultsToModelMap(modelMap);
 
@@ -78,12 +74,7 @@ public class CartController {
   @GetMapping(path = "/cart/remove/{id}")
   public String removeProduct(@PathVariable Integer id) {
 
-        ShoppingCart shoppingCart = shoppingCartService.createOrGet();
-        shoppingCart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getProduct().getId() == id)
-                .findFirst()
-                .ifPresent(shoppingCartItem -> shoppingCartService.removeProduct(shoppingCartItem.getProduct()));
-
+        shoppingCartService.removeProduct(productService.getById(id));
         return "redirect:/cart";
     }
 
@@ -97,11 +88,7 @@ public class CartController {
                     HttpStatus.NOT_FOUND, "Product not found"
             );
         }
-
-        ShoppingCart shoppingCart = shoppingCartService.createOrGet();
-
         shoppingCartService.addProduct(product);
-        shoppingCartService.save(shoppingCart);
 
         return "redirect:/cart";
 
