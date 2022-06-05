@@ -44,7 +44,7 @@ public class AuthController {
     private OrderService orderService;
 
     @GetMapping("/login")
-    public String login(ModelMap modelMap) {
+    public String showLoginForm(ModelMap modelMap) {
 
         addDefaultsToModelMap(modelMap);
         return "login";
@@ -94,15 +94,9 @@ public class AuthController {
         }
         addDefaultsToModelMap(modelMap);
         String currentUser = authentication.getName();
-
         User user = userService.findByEmailAddress(currentUser);
-
-
-        log.info("user: " + user.getId());
-
         modelMap.addAttribute("userName", currentUser);
         List<Order> orders = orderService.findByUserId(user.getId());
-
         modelMap.addAttribute("orders", orders);
 
         return "panel";
