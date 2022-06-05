@@ -33,7 +33,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
     private CurrencyRateService currencyRateService;
 
-    private ShoppingCart shoppingCart;
 
     @Autowired
     private HttpSession httpSession;
@@ -49,16 +48,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private ShoppingCart getShoppingCart() {
         if (httpSession.getAttribute("shoppingCartId") == null) {
-            shoppingCart = new ShoppingCart();
-            return shoppingCart;
+            return new ShoppingCart();
         }
         Integer shoppingCartId = (Integer) httpSession.getAttribute("shoppingCartId");
-        shoppingCart = getById(shoppingCartId);
-        return shoppingCart;
+        return getById(shoppingCartId);
     }
 
     private ShoppingCart getShoppingCartByUser(String username) {
         User user = userService.findByEmailAddress(username);
+        ShoppingCart shoppingCart;
         if (shoppingCartRepository.existsByUserId(user.getId())) {
             shoppingCart = this.getByUserId(user.getId());
         } else {
@@ -91,9 +89,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void addProduct(Product product) {
-        if (shoppingCart == null) {
-            shoppingCart = createOrGet();
-        }
+        ShoppingCart shoppingCart = createOrGet();
         shoppingCart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct() == product)
                 .findFirst()
@@ -111,15 +107,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void removeProduct(Product product) {
-        if (shoppingCart == null) {
-            shoppingCart = createOrGet();
-        }
-
+        ShoppingCart shoppingCart = createOrGet();
         shoppingCart.getCartItems().removeIf(cartItem -> cartItem.getProduct() == product);
     }
 
     @Override
     public void changeProductQuantity(Product product, int quantity) {
+        ShoppingCart shoppingCart = createOrGet();
         if (quantity <= 0) {
             this.removeProduct(product);
         } else {
@@ -138,9 +132,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void changeProductQuantityById(int id, int quantity) {
 
-        if (shoppingCart == null) {
-            createOrGet();
-        }
+        ShoppingCart shoppingCart = createOrGet();
+
 
         shoppingCart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct().getId() == id)
@@ -153,6 +146,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public BigDecimal getTotal() {
+        ShoppingCart shoppingCart = createOrGet();
         calculateDisplayPrice(shoppingCart);
         return shoppingCart.getCartItems().stream()
                 .map(cartItem -> cartItem.getProduct().getDisplayPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
