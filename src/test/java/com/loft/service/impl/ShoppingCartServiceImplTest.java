@@ -29,6 +29,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 class ShoppingCartServiceImplTest {
@@ -115,6 +116,10 @@ class ShoppingCartServiceImplTest {
     @Test
     void shouldAddNewProductToCart() {
         //given
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setId(1);
+        Mockito.when(shoppingCartRepository.findById(any())).thenReturn(Optional.of(shoppingCart));
+        Mockito.when(httpSession.getAttribute("shoppingCartId")).thenReturn(1);
         Authentication authentication = Mockito.mock(Authentication.class);
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -125,7 +130,7 @@ class ShoppingCartServiceImplTest {
         product.setTitle("test");
         product.setPrice(BigDecimal.ONE);
         //when
-        ShoppingCart shoppingCart = shoppingCartService.createOrGet();
+
         shoppingCartService.addProduct(product);
         shoppingCartService.addProduct(product);
         Set<ShoppingCartItem> cartItems = shoppingCart.getCartItems();
@@ -139,6 +144,10 @@ class ShoppingCartServiceImplTest {
     @Test
     void shouldRemoveProductFromCart() {
         //given
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setId(1);
+        Mockito.when(shoppingCartRepository.findById(any())).thenReturn(Optional.of(shoppingCart));
+        Mockito.when(httpSession.getAttribute("shoppingCartId")).thenReturn(1);
         Authentication authentication = Mockito.mock(Authentication.class);
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -148,19 +157,26 @@ class ShoppingCartServiceImplTest {
         Product product = new Product();
         product.setTitle("test");
         product.setPrice(BigDecimal.ONE);
+        Product secondProduct = new Product();
+        secondProduct.setTitle("test2");
+        secondProduct.setPrice(BigDecimal.ONE);
         //when
-        ShoppingCart shoppingCart = shoppingCartService.createOrGet();
         shoppingCartService.addProduct(product);
+        shoppingCartService.addProduct(secondProduct);
         shoppingCartService.removeProduct(product);
         Set<ShoppingCartItem> cartItems = shoppingCart.getCartItems();
         //then
-        assertThat(cartItems.size()).isEqualTo(0);
+        assertThat(cartItems.size()).isEqualTo(1);
 
     }
 
     @Test
     void shouldChangeProductQuantityInCart() {
         //given
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setId(1);
+        Mockito.when(shoppingCartRepository.findById(any())).thenReturn(Optional.of(shoppingCart));
+        Mockito.when(httpSession.getAttribute("shoppingCartId")).thenReturn(1);
         Authentication authentication = Mockito.mock(Authentication.class);
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -171,7 +187,6 @@ class ShoppingCartServiceImplTest {
         product.setTitle("test");
         product.setPrice(BigDecimal.ONE);
         //when
-        ShoppingCart shoppingCart = shoppingCartService.createOrGet();
         shoppingCartService.addProduct(product);
         shoppingCartService.changeProductQuantity(product, 3);
         Set<ShoppingCartItem> cartItems = shoppingCart.getCartItems();
@@ -184,6 +199,10 @@ class ShoppingCartServiceImplTest {
     @Test
     void shouldChangeProductQuantityByProductIdInCart() {
         //given
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setId(1);
+        Mockito.when(shoppingCartRepository.findById(any())).thenReturn(Optional.of(shoppingCart));
+        Mockito.when(httpSession.getAttribute("shoppingCartId")).thenReturn(1);
         Authentication authentication = Mockito.mock(Authentication.class);
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -199,7 +218,6 @@ class ShoppingCartServiceImplTest {
         product2.setPrice(BigDecimal.ONE);
         product2.setId(2);
         //when
-        ShoppingCart shoppingCart = shoppingCartService.createOrGet();
         shoppingCartService.addProduct(product);
         shoppingCartService.addProduct(product2);
         shoppingCartService.changeProductQuantityById(product.getId(), 3);
@@ -213,6 +231,10 @@ class ShoppingCartServiceImplTest {
     @Test
     void shouldReturnProperTotalCartItemsPrice() {
         //given
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setId(1);
+        Mockito.when(shoppingCartRepository.findById(any())).thenReturn(Optional.of(shoppingCart));
+        Mockito.when(httpSession.getAttribute("shoppingCartId")).thenReturn(1);
         Authentication authentication = Mockito.mock(Authentication.class);
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -229,7 +251,6 @@ class ShoppingCartServiceImplTest {
         product2.setPrice(BigDecimal.TEN);
         product2.setId(2);
         //when
-        ShoppingCart shoppingCart = shoppingCartService.createOrGet();
         shoppingCartService.addProduct(product);
         shoppingCartService.addProduct(product);
         shoppingCartService.addProduct(product2);

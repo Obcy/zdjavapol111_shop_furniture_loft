@@ -48,6 +48,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private ShoppingCart getShoppingCart() {
         if (httpSession.getAttribute("shoppingCartId") == null) {
+            log.info("Creating new shopping cart");
             return new ShoppingCart();
         }
         Integer shoppingCartId = (Integer) httpSession.getAttribute("shoppingCartId");
