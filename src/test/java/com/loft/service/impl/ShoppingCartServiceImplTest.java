@@ -1,25 +1,18 @@
 package com.loft.service.impl;
 
-import com.loft.currency.model.CurrencyRate;
 import com.loft.currency.service.CurrencyRateService;
 import com.loft.model.*;
 import com.loft.repository.ShoppingCartRepository;
-import com.loft.repository.UserRepository;
-import com.loft.service.ShoppingCartService;
 import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
@@ -28,7 +21,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,9 +34,6 @@ class ShoppingCartServiceImplTest {
 
     @Mock
     private CurrencyRateService currencyRateService;
-
-    @Mock
-    private UserRepository userRepository;
 
     @Mock
     private ShoppingCartRepository shoppingCartRepository;
