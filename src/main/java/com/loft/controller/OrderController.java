@@ -8,6 +8,7 @@ import com.loft.service.ShoppingCartService;
 import com.loft.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -84,7 +85,7 @@ public class OrderController {
         order.setOrderStatus(OrderStatus.NEW);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
+        if (authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
 
             User user = userService.findByEmailAddress(authentication.getName());
             order.setUser(user);

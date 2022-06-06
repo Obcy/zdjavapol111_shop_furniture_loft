@@ -10,6 +10,7 @@ import com.loft.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -87,7 +88,8 @@ public class AuthController {
     @GetMapping("/panel")
     String showUserPanel(ModelMap modelMap) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.isAuthenticated()) {
+
+        if (authentication instanceof AnonymousAuthenticationToken) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN, "You are not allowed to view this page."
             );
