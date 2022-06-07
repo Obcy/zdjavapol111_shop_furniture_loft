@@ -22,6 +22,3 @@ insert into product (title, description, thumbnail, category_id, price, author, 
 insert into product (title, description, thumbnail, category_id, price, author, product_type) values ('Szafka RTV', 'Prezentowana szafka RTV została wykonana z litego jesionu wykończonego naturalnym olejowoskiem.', '/images/szafka-rtv.jpg', 5, 2150.00, '', 'HOME');
 
 
-#INSERT INTO shopping_cart (id, user_id) VALUES (1, 1);
-#INSERT INTO shopping_cart_item (id, quantity, product_id, shopping_cart_id) VALUES (1, 2, 1, 1);
-
